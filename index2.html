@@ -249,7 +249,235 @@
     </div>
 
     <script>
-        // (이하 JavaScript 내용 동일)
+        const startPage = document.querySelector('#start-page');
+        const qnaPage = document.querySelector('#qna-page');
+        const resultPage = document.querySelector('#result-page');
+
+        const qCount = 10;
+        let selected = {};
+
+        const qnaList = [
+            {
+                q: 'Q1. 서점에서 새 책을 고를 때, 당신의 시선을 가장 먼저 끄는 것은?',
+                a: [
+                    { answer: '상상력을 자극하는 환상적인 표지나<br>흥미로운 제목', type: 'A' },
+                    { answer: '‘지금 가장 인기 있는 책’<br>베스트 셀러 코너', type: 'B' },
+                    { answer: '‘나를 성장시키는 인문학’<br>자기계발 코너', type: 'C' },
+                    { answer: '주인공의 감정이 느껴지는<br>아련한 분위기의 표지', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q2. 당신이 꿈꾸는 완벽한 독서 공간은?',
+                a: [
+                    { answer: '창밖으로 비현실적인 풍경이<br>펼쳐지는 아늑한 다락방', type: 'A' },
+                    { answer: '요즘 뜨는 동네의 세련된 북카페', type: 'B' },
+                    { answer: '방해받지 않는 조용한 도서관의<br>서고 또는 개인 서재', type: 'C' },
+                    { answer: '따뜻한 침대 속이나 푹신한 소파 위', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q3. 정말 재미있는 책을 다 읽고 난 직후 당신의 행동은?',
+                a: [
+                    { answer: '이 작가의 다른 책이나 비슷한<br>세계관의 소설을 바로 검색한다.', type: 'A' },
+                    { answer: 'SNS에 멋진 감상평을 남기거나<br>친구들에게 적극 추천한다.', type: 'B' },
+                    { answer: '인상 깊었던 구절을 메모하거나<br>핵심 메시지에 대해 깊이 생각한다.', type: 'C' },
+                    { answer: '한동안 책의 마지막 페이지를<br>넘기지 못하고 여운에 푹 빠진다.', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q4. 당신이 가장 매력을 느끼는 주인공 타입은?',
+                a: [
+                    { answer: '운명에 맞서 세계를 구하는<br>영웅 또는 모험가', type: 'A' },
+                    { answer: '동시대의 문제를 겪으며<br>성장하는 현실적인 인물', type: 'B' },
+                    { answer: '시대를 초월하는 통찰력을 보여주는<br>철학자나 역사적 인물', type: 'C' },
+                    { answer: '섬세하고 복잡한 내면을 가진<br>인간 관계 속에서 고뇌하는 인물', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q5. 책과 함께 가장 즐겨 찾는 아이템이 있다면?',
+                a: [
+                    { answer: '책 속 세계관이 그려진<br>지도나 설정집', type: 'A' },
+                    { answer: '유명 서점 로고가 박힌<br>예쁜 북마크나 에코백', type: 'B' },
+                    { answer: '중요한 내용을 표시할<br>다양한 색깔의 인덱스 스티커', type: 'C' },
+                    { answer: '책의 분위기와 어울리는<br>향초나 차(Tea)', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q6. 책을 읽다가 덮어버리게 되는 가장 큰 이유는?',
+                a: [
+                    { answer: '앞으로의 전개가 너무<br>뻔하게 예측될 때', type: 'A' },
+                    { answer: '요즘 트렌드와는 너무 동떨어진<br>이야기라고 느껴질 때', type: 'B' },
+                    { answer: '새로운 지식이나 삶에 적용할<br>교훈을 얻을 수 없을 때', type: 'C' },
+                    { answer: '등장인물들의 감정에 전혀<br>이입하거나 공감할 수 없을 때', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q7. 좋아하는 책이 영화화된다는 소식을 들었을 때 당신의 반응은?',
+                a: [
+                    { answer: '"내가 상상했던 세계가<br>어떻게 구현될까?"', type: 'A' },
+                    { answer: '"이제 이 책에 대해 더 많은 사람과<br>이야기할 수 있겠군!"', type: 'B' },
+                    { answer: '"원작의 핵심 메시지를<br>잘 담아낼 수 있을까?"', type: 'C' },
+                    { answer: '"내가 사랑한 캐릭터의 미묘한<br>감정선을 잘 연기할 수 있을까?"', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q8. 당신의 책장을 정리하는 방식은?',
+                a: [
+                    { answer: '판타지, SF, 추리 등 장르별<br>혹은 작가나 시리즈별로 정렬', type: 'A' },
+                    { answer: '최근에 산 신간이나 베스트셀러를<br>가장 잘 보이는 곳에 배치', type: 'B' },
+                    { answer: '역사, 과학, 철학 등 주제별로<br>분류하여 찾기 쉽게 정리', type: 'C' },
+                    { answer: '딱히 규칙은 없다. 내 손이 닿는 곳,<br>마음이 끌리는 곳에 둘 뿐', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q9. 무인도에 딱 1권의 책만 가져갈 수 있다면?',
+                a: [
+                    { answer: '여러 번 읽어도 질리지 않을<br>방대한 세계관의 장편소설', type: 'A' },
+                    { answer: '세상과 연결된 느낌을 줄<br>최신 베스트셀러 소설', type: 'B' },
+                    { answer: '생존 기술이나 철학 등 실질적인<br>지혜를 얻을 비문학 서적', type: 'C' },
+                    { answer: '읽을 때마다 새로운 감동을 주는<br>인생 소설이나 시집', type: 'D' },
+                ]
+            },
+            {
+                q: 'Q10. 당신의 ‘읽고 싶은 책’ 목록은 어떤 상태인가?',
+                a: [
+                    { answer: '아직 탐험하지 않은 새로운<br>세계와 모험으로 가득하다.', type: 'A' },
+                    { answer: '각종 매체와 주변의 추천으로<br>채워진 ‘요즘 화제의 책’ 리스트다.', type: 'B' },
+                    { answer: '지적 호기심을 채워줄 다양한<br>분야의 지식 서적들로 채워져 있다.', type: 'C' },
+                    { answer: '제목만 봐도 마음이 몽글몽글한,<br>감성적인 이야기로 가득하다.', type: 'D' },
+                ]
+            },
+        ];
+
+        const infoList = {
+            'A': {
+                char: '이세계(異세계) 책방의 마법사',
+                quote: '"현실의 문은 잠시 닫아두지. 책을 펼치는 순간, 새로운 차원의 문이 열릴 테니!"',
+                img: '001.png',
+                desc: "당신은 현실 세계의 물리 법칙보다는 마법과 미지의 법칙이 지배하는 세계를 탐험하는 마법사입니다. 당신의 손에 들린 책은 단순한 종이 뭉치가 아니라, 다른 세계로 통하는 '포탈'이죠. 밤새 용과 싸우고, 우주 함대를 지휘하며, 마법 주문을 외우느라 현실의 시간을 잊는 일이 잦습니다. 남들이 이해 못 할 설정이나 방대한 세계관에 오히려 가슴이 뛰고, 시리즈의 마지막 권을 덮는 순간엔 함께 모험한 동료를 떠나보내는 듯한 상실감에 빠지기도 합니다.",
+                items: "책 속에 끼워둔 세계관 지도, 직접 그린 듯한 가문 문장 책갈피",
+                skills: "#밤샘정주행 #뇌내망상 #주인공빙의",
+                genres: "판타지, SF, 무협, 스페이스 오페라"
+            },
+            'B': {
+                char: '#북스타그램 인플루언서',
+                quote: '"좋아요, 댓글, 공유는 작가와 저를 춤추게 합니다! 이 책, 완전 강추!"',
+                img: '002.png',
+                desc: "당신은 서점가를 움직이는 보이지 않는 손, #북스타그램 인플루언서입니다. 새로 나온 책은 누구보다 먼저 읽어봐야 직성이 풀리며, '요즘 대세', '인생 책 등극' 같은 해시태그로 세상에 좋은 책을 알리는 데 희열을 느끼죠. 당신의 서평 피드 하나에 출판사가 들썩이고, 절판된 책이 역주행하기도 합니다. 책을 고를 땐 내용만큼이나 표지 디자인과 소셜미디어에서의 언급량도 중요하게 생각하며, 카페에서 책 사진을 찍을 땐 음료와의 색 조합까지 고려하는 섬세한 감각의 소유자입니다.",
+                items: "감성적인 필터가 적용된 책 사진, 예쁜 손글씨로 쓴 필사 노트",
+                skills: "#신간알림 #베스트셀러제조기 #영업왕",
+                genres: "최신 베스트셀러, 화제의 신간, 사회파 소설, 문학상 수상작"
+            },
+            'C': {
+                char: '고대의 지식을 탐하는 현자',
+                quote: '"모든 질문의 답은 책에 있다. 아직 찾지 못했다면, 충분히 읽지 않은 것이다."',
+                img: '003.png',
+                desc: "당신은 인류의 지혜가 집약된 도서관 깊은 곳에서 진리를 탐구하는 현자입니다. 소설 속 인물의 사랑 이야기보다는 역사 속 인물의 결정이 세상을 어떻게 바꿨는지에 더 흥미를 느끼죠. 당신에게 독서는 단순한 취미가 아니라, 세상을 이해하고 스스로를 성장시키는 구도의 과정입니다. 책을 읽다가 떠오른 생각의 꼬리를 물고 몇 시간이고 사색에 잠기며, 책장에는 분야를 막론하고 지적 호기심을 채워줄 책들이 빽빽하게 꽂혀 있습니다.",
+                items: "빼곡하게 메모가 적힌 포스트잇, 색깔별로 용도가 다른 형광펜",
+                skills: "#지식저장고 #걸어다니는백과사전 #팩트폭격기",
+                genres: "인문, 역사, 철학, 과학, 경제/경영"
+            },
+            'D': {
+                char: '활자 속에서 위로를 찾는 몽상가',
+                quote: '"때론 문장 하나가 백 마디 말보다 더 따뜻한 위로를 건넨다."',
+                img: '004.png',
+                desc: "당신은 현실의 소음에서 벗어나 이야기의 감성에 푹 젖어들고 싶은 몽상가입니다. 자극적인 사건보다는 등장인물의 미묘한 감정선, 아름다운 문장의 울림에 더 깊이 빠져들죠. 당신에게 책은 가장 안전하고 아늑한 도피처이자, 지친 마음을 어루만져주는 다정한 친구입니다. 책 속 인물의 슬픔에 함께 눈물짓고, 그들의 작은 행복에 내 일처럼 기뻐하며 감정을 충전합니다. 당신의 책갈피는 유난히 눈물 자국이 많을지도 모릅니다.",
+                items: "책의 분위기와 어울리는 향초, 푹신한 담요와 따뜻한 차 한 잔",
+                skills: "#감정이입100% #N차재독 #인생문장수집가",
+                genres: "감성 에세이, 문학 소설, 로맨스, 시집"
+            },
+            'ALL': {
+                char: '장르 파괴자, 올라운더 리더',
+                quote: '"어디, 오늘은 어떤 이야기를 만나볼까?"',
+                img: '005.png',
+                desc: "특정 캐릭터로 당신을 규정할 수 없습니다. 당신은 그날의 기분에 따라 마법사가 되었다가, 인플루언서로 변신하고, 현자의 지혜를 탐하다가 몽상가의 세상에 푹 빠져버리는, 장르의 경계를 자유롭게 넘나드는 '올라운더 리더'입니다. 당신의 책장은 온갖 장르가 사이좋게 어깨를 맞대고 있는, 그 자체로 하나의 작은 우주와 같습니다. 당신의 가장 큰 무기는 편견 없이 모든 이야기를 사랑할 수 있는 열린 마음입니다!",
+                items: "그날의 기분에 따라 바뀌는 책갈피",
+                skills: "#편식없는독서 #장르컬렉터 #아무거나잘읽어요",
+                genres: "모든 분야"
+            }
+        };
+        
+        function init() {
+            selected = { A: 0, B: 0, C: 0, D: 0 };
+        }
+
+        function startTest() {
+            init();
+            startPage.classList.remove('active');
+            qnaPage.classList.add('active');
+            goNext(0);
+        }
+
+        function restartTest() {
+            resultPage.classList.remove('active');
+            startPage.classList.add('active');
+        }
+
+        function goNext(qIdx) {
+            if (qIdx === qCount) {
+                goResult();
+                return;
+            }
+
+            const qBox = document.querySelector('.qBox');
+            const aBox = document.querySelector('.aBox');
+            const status = document.querySelector('.status');
+            const progressBar = document.querySelector('.progress-bar');
+            
+            status.textContent = `${qIdx + 1} / ${qCount}`;
+            progressBar.style.width = ((qIdx + 1) / qCount) * 100 + '%';
+            
+            qBox.innerHTML = qnaList[qIdx].q;
+            aBox.innerHTML = '';
+
+            qnaList[qIdx].a.forEach(item => {
+                const answerBtn = document.createElement('button');
+                answerBtn.className = 'btn answer-btn';
+                
+                // 줄바꿈 보존 위해 innerHTML 사용
+                answerBtn.innerHTML = item.answer; 
+                
+                answerBtn.addEventListener('click', () => {
+                    const allButtons = document.querySelectorAll('.aBox .btn');
+                    allButtons.forEach(btn => btn.disabled = true);
+                    
+                    selected[item.type]++;
+                    setTimeout(() => goNext(qIdx + 1), 300);
+                });
+                aBox.appendChild(answerBtn);
+            });
+        }
+
+        function calculateResult() {
+            const scores = Object.values(selected);
+            const highestScore = Math.max(...scores);
+            const winners = [];
+            for (const type in selected) {
+                if (selected[type] === highestScore) {
+                    winners.push(type);
+                }
+            }
+            return winners.length > 1 ? 'ALL' : winners[0];
+        }
+
+        function goResult() {
+            qnaPage.classList.remove('active');
+            resultPage.classList.add('active');
+
+            const resultType = calculateResult();
+            const resultData = infoList[resultType];
+            
+            document.querySelector('#result-page .result-char').textContent = resultData.char;
+            document.querySelector('#result-page .result-quote').textContent = resultData.quote;
+            document.querySelector('#result-page .result-img').src = resultData.img;
+            document.querySelector('#result-page .result-desc').innerHTML = resultData.desc;
+            
+            document.querySelector('#result-page .detail-items').textContent = resultData.items;
+            document.querySelector('#result-page .detail-skills').textContent = resultData.skills;
+            document.querySelector('#result-page .detail-genres').textContent = resultData.genres;
+        }
+        
+        init();
     </script>
 </body>
 </html>
