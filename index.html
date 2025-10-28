@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 나의 독서 캐릭터는?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap');
+
+        :root {
+            --main-color: #4a044e; /* Deep Purple */
+            --light-color: #f3e8ff; /* Light Purple */
+            --dark-color: #3b0764;  /* Darker Purple */
+            --bg-color: #fdfcff;    /* Off-white */
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        #app {
+            background-color: white;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .page {
+            display: none;
+            padding: 30px 25px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Start Page */
+        #start-page h1 {
+            color: var(--dark-color);
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        #start-page p {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        
+        /* Q&A Page */
+        #qna-page .progress {
+            width: 100%;
+            height: 10px;
+            background-color: var(--border-color);
+            border-radius: 5px;
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        #qna-page .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--main-color);
+            transition: width 0.4s ease-in-out;
+        }
+        
+        #qna-page .status {
+            color: var(--text-light);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        #qna-page .qBox {
+            color: var(--text-dark);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+        
+        /* Result Page */
+        #result-page .result-char {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background-color: var(--light-color);
+            color: var(--main-color);
+            padding: 8px 18px;
+            border-radius: 999px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        
+        
+        #result-page .result-quote {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            margin-bottom: 25px;
+            padding: 0 10px;
+            font-style: italic;
+        }
+
+        #result-page .result-img {
+            width: 70%;
+            max-width: 280px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+        }
+        
+        #result-page .result-desc {
+            color: var(--text-dark);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            text-align: justify;
+            margin-bottom: 30px;
+            background-color: #f9fafb;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .result-details {
+            text-align: left;
+            padding: 15px;
+            background-color: #f9fafb;
+            border-radius: 10px;
+        }
+
+        .result-details .detail-item {
+            margin-bottom: 20px;
+        }
+        .result-details .detail-item:last-child {
+            margin-bottom: 0;
+        }
+        .result-details h3 {
+            font-size: 1.1rem;
+            color: var(--main-color);
+            margin: 0 0 8px 0;
+            border-left: 4px solid var(--main-color);
+            padding-left: 10px;
+        }
+        .result-details p {
+            font-size: 1rem;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1.6;
+            padding-left: 14px;
+        }
+
+        /* Buttons */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            margin-bottom: 12px;
+            border: 2px solid var(--main-color);
+            border-radius: 15px;
+            background-color: var(--main-color);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-color);
+            border-color: var(--dark-color);
+            transform: translateY(-2px);
+        }
+        
+        .answer-btn {
+            background-color: white;
+            color: var(--main-color);
+            line-height: 1.5; /* 줄바꿈 시 줄 간격 조절 */
+        }
+        .answer-btn:hover {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            border-color: var(--dark-color);
+        }
+        
+        #result-page .btn {
+            margin-top: 30px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app">
+        <section id="start-page" class="page active">
+            <h2>🍎2025 임실고 북크닉🍎</h2>
+            <h1>나의 독서 성향 테스트</h1>
+            <p>10개의 질문으로 알아보는<br>나의 독서 스타일</p>
+            <button class="btn" onclick="startTest()">테스트 시작하기</button>
+        </section>
+
+        <section id="qna-page" class="page">
+            <div class="progress">
+                <div class="progress-bar"></div>
+            </div>
+            <div class="status"></div>
+            <div class="qBox"></div>
+            <div class="aBox"></div>
+        </section>
+
+        <section id="result-page" class="page">
+            <div class="result-char"></div>
+            <p class="result-quote"></p>
+            <img class="result-img" src="" alt="결과 이미지">
+            <div class="result-desc"></div>
+            <div class="result-details">
+                <div class="detail-item">
+                    <h3>✨ 시그니처 아이템</h3>
+                    <p class="detail-items"></p>
+                </div>
+                <div class="detail-item">
+                    <h3>⚔️ 필살기</h3>
+                    <p class="detail-skills"></p>
+                </div>
+                <div class="detail-item">
+                    <h3>📚 추천 장르</h3>
+                    <p class="detail-genres"></p>
+                </div>
+            </div>
+            <button class="btn" onclick="restartTest()">테스트 다시하기</button>
+        </section>
+    </div>
+
+    <script>
+        // (이하 JavaScript 내용 동일)
+    </script>
+</body>
+</html>
